@@ -1,0 +1,33 @@
+# name of main workflow
+name: Development
+
+# This workflow will build and deploy your app to Vercel when a push is made to the main branch
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+# This will filter branches to run except the main branch
+on:
+  push:
+    branches:
+      - main
+
+# This will make jobs on your pipelines
+jobs:
+  Deploy-Development:
+    runs-on: ubuntu-latest
+    steps:
+    
+        - uses: actions/checkout@v3
+
+        - name: Installation Vercel
+          run: npm i -g vercel
+
+        - name: Pull vercel environment
+          run: vercel pull --yes --environment=development --token=${{ secrets.VERCEL_TOKEN }}
+
+        - name: Build project
+          run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+        - name: Deploy project
+          run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
